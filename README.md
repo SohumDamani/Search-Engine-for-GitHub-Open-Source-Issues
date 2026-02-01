@@ -20,11 +20,11 @@ Current components:
 1. update your token in the .env file
 2. Run
 
-docker compose build
-docker compose up -d
-docker exec -it cs242 bash
-cd /app
-python dataCollection/fetch_repos.py
+- docker compose build
+- docker compose up -d
+- docker exec -it cs242 bash
+- cd /app
+- python dataCollection/fetch_repos.py
 
 
 # to check the raw data output
