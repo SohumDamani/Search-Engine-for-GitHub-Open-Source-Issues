@@ -34,3 +34,22 @@ python dataCollection/fetch_batch.py
 # to check the raw data output
 ls data/rawData
 head -2 data/rawData/repos_python.jsonl
+
+## Data pipeline ownership (3-person team)
+
+- Person Sohum – Repositories
+  - Scripts: `fetch_repos.py`, `fetch_repos_batch.py`, `merge_repos.py`
+  - Outputs:
+    - Raw: `data/rawData/repos_*.jsonl`
+    - Processed: `data/processed/all_repos.jsonl`
+
+- Person Trisha/Yashaswani – Issues
+  - Scripts: `fetch_issues.py`, `merge_issues.py` (planned)
+  - Outputs:
+    - Raw: `data/rawData/issues_*.jsonl`
+    - Processed: `data/processed/all_issues.jsonl` (planned)
+
+- Person Trisha/Yashaswani – Preprocessing for IR
+  - Scripts: `preprocess.py` (planned)
+  - Outputs:
+    - `data/processed/documents.jsonl` for BM25/BERT indexing
