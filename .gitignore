@@ -3,6 +3,5 @@ __pycache__/
 venv/
 .env
 node_modules/
-data/
 config.yaml
 .DS_Store

@@ -11,20 +11,24 @@ Current components:
     - setups the github url and request format.
     - saves the token and ensures to take care of rate limit issue
   - `fetch_repos.py`
-    - current;y hardcoded to search only topic = "python" --- update the topic for your usecase
-    - Saves results as JSON Lines (`.jsonl`) in `data/rawData/repos_python.jsonl`
+    - Saves results as JSON Lines (`.jsonl`) in `data/rawData/repos_<topic>.jsonl`
     - Prints a short summary of the top repositories
+  - `fetch_batch.py`
+    - Has a list of topics to search for on github 
+    - Has a limit of 100 repos for each topic.
+
 
 ## How to run (current stage)
 
 1. update your token in the .env file
-2. Run
+2. Update the topics to your choice different from the ones written and comment out the earlier ones
+3. Collect atleast for 20 topics.
 
 docker compose build
 docker compose up -d
 docker exec -it cs242 bash
 cd /app
-python dataCollection/fetch_repos.py
+python dataCollection/fetch_batch.py
 
 
 # to check the raw data output

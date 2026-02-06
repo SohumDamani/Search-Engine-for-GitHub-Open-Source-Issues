@@ -9,6 +9,7 @@ Right now we:
 """
 
 import json
+import argparse
 from pathlib import Path
 from typing import List, Dict, Any
 
@@ -50,20 +51,38 @@ def save_repos_jsonl(topic: str, repos: List[Dict[str, Any]]) -> Path:
 
 
 def main() -> None:
-    topic = "python"  # we will later parameterize
-    repos = search_repos_by_topic(topic, limit=20)
+    parser = argparse.ArgumentParser(
+        description="Fetch GitHub repositories for a topic and save as JSONL."
+    )
+    parser.add_argument(
+        "--topic",
+        type=str,
+        default="python",
+        help="GitHub topic to search for (default: python)",
+    )
+    parser.add_argument(
+        "--limit",
+        type=int,
+        default=20,
+        help="Number of repositories to fetch (max 100 per request, default: 20)",
+    )
+    args = parser.parse_args()
 
+    topic = args.topic
+    limit = args.limit
+
+    repos = search_repos_by_topic(topic, limit=limit)
     print(f"Fetched {len(repos)} repos for topic '{topic}'.")
 
     output_path = save_repos_jsonl(topic, repos)
     print(f"Saved to {output_path}")
 
-    # Print a tiny summary of first few repos
     for repo in repos[:5]:
         full_name = repo.get("full_name")
         stars = repo.get("stargazers_count")
         description = (repo.get("description") or "").replace("\n", " ")
         print(f"- {full_name} (★ {stars}) – {description[:80]}")
+
 
 
 if __name__ == "__main__":
