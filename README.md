@@ -44,7 +44,10 @@ head -2 data/rawData/repos_python.jsonl
     - Processed: `data/processed/all_repos.jsonl`
 
 - Person Trisha/Yashaswani – Issues
-  - Scripts: `fetch_issues.py`, `merge_issues.py` (planned)
+  - Scripts: `fetch_issues.py`, `merge_issues.py` 
+  - The code has been tested sucessfully and the data is about 440Mb.
+  - Look into the data and if required more add new topics
+  - For Now I have taken 1246 repos and 50 recent issues from it. We can increase the issues size also so look into it.
   - Outputs:
     - Raw: `data/rawData/issues_*.jsonl`
     - Processed: `data/processed/all_issues.jsonl` (planned)
