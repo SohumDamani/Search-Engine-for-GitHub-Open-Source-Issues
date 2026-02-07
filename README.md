@@ -43,7 +43,7 @@ head -2 data/rawData/repos_python.jsonl
     - Raw: `data/rawData/repos_*.jsonl`
     - Processed: `data/processed/all_repos.jsonl`
 
-- Person Trisha/Yashaswani – Issues
+- Person Sohum – Issues
   - Scripts: `fetch_issues.py`, `merge_issues.py` 
   - The code has been tested sucessfully and the data is about 440Mb.
   - Look into the data and if required more add new topics
