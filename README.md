@@ -90,3 +90,11 @@ python -m venv .venv
 python -m pip install --upgrade pip
 pip install elasticsearch
 
+### Step 2: Start Elasticsearch
+Open a new PowerShell window and run the following command from the extracted
+Elasticsearch directory (not the project directory):
+
+```powershell
+.\bin\elasticsearch.bat -E xpack.security.enabled=false -E discovery.type=single-node
+
+
