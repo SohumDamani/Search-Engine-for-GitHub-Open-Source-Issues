@@ -56,3 +56,37 @@ head -2 data/rawData/repos_python.jsonl
   - Scripts: `preprocess.py` (planned)
   - Outputs:
     - `data/processed/documents.jsonl` for BM25/BERT indexing
+
+---
+
+## Indexing (Part A2 – Information Retrieval)
+
+After data collection, the GitHub issues are indexed using **Elasticsearch (Lucene-based)** to enable fast, relevance-ranked full-text search (BM25).
+
+Each GitHub issue is treated as a document and indexed with structured fields such as title, body text, repository name, labels, and timestamps.
+
+### Indexing Pipeline Overview
+
+Raw GitHub Issues (`issues.jsonl`)  
+→ Preprocessing (document creation)  
+→ Elasticsearch index creation  
+→ Bulk indexing  
+→ Searchable IR index
+
+---
+
+### Prerequisites
+- Python 3.9+
+- Elasticsearch (8.x or 9.x) running locally on `http://localhost:9200`
+
+---
+
+### Step 1: Create and activate Python virtual environment
+From the project root:
+
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate
+python -m pip install --upgrade pip
+pip install elasticsearch
+
