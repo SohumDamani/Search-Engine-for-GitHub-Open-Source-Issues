@@ -26,7 +26,7 @@ with open(INPUT, "r", encoding="utf-8") as fin, open(OUTPUT, "w", encoding="utf-
             continue
 
         doc = {
-            "doc_id": issue.get("id"),
+            "issue_id": issue.get("issue_number"),
             "title": issue.get("title") or "",
             "body": issue.get("body") or "",
             "labels": [l.get("name") for l in issue.get("labels", []) if isinstance(l, dict) and "name" in l],
