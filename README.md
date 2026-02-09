@@ -52,7 +52,7 @@ head -2 data/rawData/repos_python.jsonl
     - Raw: `data/rawData/issues_*.jsonl`
     - Processed: `data/processed/all_issues.jsonl` (planned)
 
-- Person Trisha/Yashaswani – Preprocessing for IR
+- Person Thrisha/Yashaswini – Preprocessing for IR
   - Scripts: `preprocess.py` (planned)
   - Outputs:
     - `data/processed/documents.jsonl` for BM25/BERT indexing
