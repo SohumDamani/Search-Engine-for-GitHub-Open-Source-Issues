@@ -20,4 +20,4 @@ start = time.time()
 helpers.bulk(es, generate_actions())
 end = time.time()
 
-print(f"✅ Indexed documents in {end - start:.2f} seconds")
+print(f"Indexed documents in {end - start:.2f} seconds")

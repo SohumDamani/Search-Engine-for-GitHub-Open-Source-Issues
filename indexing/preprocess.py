@@ -7,7 +7,6 @@ OUTPUT = "data/processed/documents.jsonl"
 os.makedirs(os.path.dirname(OUTPUT), exist_ok=True)
 
 def repo_from_url(url: str) -> str:
-    # Example: https://api.github.com/repos/owner/name
     parts = url.rstrip("/").split("/")
     if len(parts) >= 2:
         return f"{parts[-2]}/{parts[-1]}"
@@ -20,7 +19,6 @@ with open(INPUT, "r", encoding="utf-8") as fin, open(OUTPUT, "w", encoding="utf-
     for line in fin:
         issue = json.loads(line)
 
-        # Sometimes GitHub "issues" endpoint includes PRs; skip them
         if "pull_request" in issue:
             skipped_prs += 1
             continue
@@ -38,5 +36,5 @@ with open(INPUT, "r", encoding="utf-8") as fin, open(OUTPUT, "w", encoding="utf-
         fout.write(json.dumps(doc) + "\n")
         count += 1
 
-print(f"✅ Wrote {count} issue-documents to {OUTPUT}")
-print(f"ℹ️ Skipped {skipped_prs} pull-request items")
+print(f"Wrote {count} issue-documents to {OUTPUT}")
+print(f"Skipped {skipped_prs} pull-request items")
