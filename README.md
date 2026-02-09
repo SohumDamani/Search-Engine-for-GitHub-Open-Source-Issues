@@ -69,7 +69,7 @@ Each GitHub issue is treated as a document and indexed with structured fields su
 
 ### Indexing Pipeline Overview
 
-Raw GitHub Issues (`data/rawData/issues.jsonl`)  
+Raw GitHub Issues (data/rawData/issues.jsonl)  
 → Preprocessing (document creation)  
 → Elasticsearch index creation  
 → Bulk indexing  
@@ -81,16 +81,105 @@ Raw GitHub Issues (`data/rawData/issues.jsonl`)
 
 - Python 3.9+
 - Elasticsearch 8.x or 9.x
-- Elasticsearch running locally on `http://localhost:9200`
+- Elasticsearch running locally on http://localhost:9200
 
 ---
 
-### Step 1: Create and activate Python virtual environment
+### How to Run Indexing
+
+#### Step 1: Create and activate Python virtual environment
 
 From the project root directory:
 
-```powershell
-python -m venv .venv
-.venv\Scripts\Activate
-python -m pip install --upgrade pip
-pip install -r indexing/requirements.txt
+python -m venv .venv  
+.venv\Scripts\Activate  
+python -m pip install --upgrade pip  
+pip install -r indexing/requirements.txt  
+
+---
+
+#### Step 2: Start Elasticsearch
+
+Download and extract Elasticsearch (8.x or 9.x).
+
+From the Elasticsearch directory (not the project directory), run:
+
+.\bin\elasticsearch.bat -E xpack.security.enabled=false -E discovery.type=single-node  
+
+Verify Elasticsearch is running:
+
+curl http://localhost:9200  
+
+---
+
+#### Step 3: Preprocess GitHub issues
+
+Convert raw GitHub issues into structured, IR-ready documents.
+
+From the project root:
+
+python indexing/preprocess.py  
+
+Output generated:
+
+data/processed/documents.jsonl  
+
+Each line represents one GitHub issue with fields:
+issue_id, repo, title, body, labels, state, created_at
+
+---
+
+#### Step 4: Create Elasticsearch index
+
+Create the Elasticsearch index with appropriate mappings and analyzers:
+
+python indexing/create_index.py  
+
+This creates an index named:
+
+github_issues  
+
+---
+
+#### Step 5: Bulk index documents
+
+Index all preprocessed documents into Elasticsearch:
+
+python indexing/index_documents.py  
+
+Indexing completes in approximately 16 seconds on a local machine.
+
+---
+
+### Verifying Indexing Output
+
+Check the number of indexed documents:
+
+Invoke-RestMethod http://localhost:9200/github_issues/_count  
+
+Result:
+
+count: 55976  
+
+---
+
+Run a sample search query:
+
+(Invoke-RestMethod "http://localhost:9200/github_issues/_search?q=bug&size=3").hits.hits._source |
+Select-Object repo,title,issue_id  
+
+Example output:
+
+repo    title                                   issue_id  
+        [Bug] name your bug                     924  
+        [Bug] the title of bug report            60  
+        [Bug]: New-WinUserLanguageList bug      1640  
+
+---
+
+### Indexing Output Summary
+
+- Processed documents: data/processed/documents.jsonl  
+- Elasticsearch index: github_issues  
+- Total indexed documents: 55,976 GitHub issues  
+- Search type: Full-text keyword search using BM25 ranking
