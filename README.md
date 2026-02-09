@@ -61,13 +61,15 @@ head -2 data/rawData/repos_python.jsonl
 
 ## Indexing (Part A2 – Information Retrieval)
 
-After data collection, the GitHub issues are indexed using **Elasticsearch (Lucene-based)** to enable fast, relevance-ranked full-text search (BM25).
+After data collection, GitHub issues are indexed using Elasticsearch (Lucene-based) to enable fast, relevance-ranked full-text search using the BM25 ranking function.
 
-Each GitHub issue is treated as a document and indexed with structured fields such as title, body text, repository name, labels, and timestamps.
+Each GitHub issue is treated as a document and indexed with structured fields such as title, body text, repository name, labels, state, and timestamps.
+
+---
 
 ### Indexing Pipeline Overview
 
-Raw GitHub Issues (`issues.jsonl`)  
+Raw GitHub Issues (`data/rawData/issues.jsonl`)  
 → Preprocessing (document creation)  
 → Elasticsearch index creation  
 → Bulk indexing  
@@ -76,25 +78,19 @@ Raw GitHub Issues (`issues.jsonl`)
 ---
 
 ### Prerequisites
+
 - Python 3.9+
-- Elasticsearch (8.x or 9.x) running locally on `http://localhost:9200`
+- Elasticsearch 8.x or 9.x
+- Elasticsearch running locally on `http://localhost:9200`
 
 ---
 
 ### Step 1: Create and activate Python virtual environment
-From the project root:
+
+From the project root directory:
 
 ```powershell
 python -m venv .venv
 .venv\Scripts\Activate
 python -m pip install --upgrade pip
-pip install elasticsearch
-
-### Step 2: Start Elasticsearch
-Open a new PowerShell window and run the following command from the extracted
-Elasticsearch directory (not the project directory):
-
-```powershell
-.\bin\elasticsearch.bat -E xpack.security.enabled=false -E discovery.type=single-node
-
-
+pip install -r indexing/requirements.txt
