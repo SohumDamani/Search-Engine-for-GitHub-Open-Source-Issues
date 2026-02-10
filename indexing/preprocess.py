@@ -25,11 +25,11 @@ with open(INPUT, "r", encoding="utf-8") as fin, open(OUTPUT, "w", encoding="utf-
     "body": issue.get("body") or "",
     "state": issue.get("state") or "",
     "labels": issue.get("labels") or [],
+    "comments": issue.get("comments") or 0,
     "created_at": issue.get("created_at") or "",
     "updated_at": issue.get("updated_at") or "",
-    "issue_url": (raw_obj.get("html_url") if isinstance(raw_obj, dict) else "") or ""
+    "issue_url": raw_obj.get("html_url") or ""
 }
-
 
         fout.write(json.dumps(doc, ensure_ascii=False) + "\n")
         count += 1
