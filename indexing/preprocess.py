@@ -6,12 +6,6 @@ OUTPUT = "data/processed/documents.jsonl"
 
 os.makedirs(os.path.dirname(OUTPUT), exist_ok=True)
 
-def repo_from_url(url: str) -> str:
-    parts = url.rstrip("/").split("/")
-    if len(parts) >= 2:
-        return f"{parts[-2]}/{parts[-1]}"
-    return ""
-
 count = 0
 skipped_prs = 0
 
@@ -19,7 +13,8 @@ with open(INPUT, "r", encoding="utf-8") as fin, open(OUTPUT, "w", encoding="utf-
     for line in fin:
         issue = json.loads(line)
 
-        if "pull_request" in issue:
+        raw_obj = issue.get("raw", {})
+        if isinstance(raw_obj, dict) and "pull_request" in raw_obj:
             skipped_prs += 1
             continue
 
@@ -27,13 +22,13 @@ with open(INPUT, "r", encoding="utf-8") as fin, open(OUTPUT, "w", encoding="utf-
             "issue_id": issue.get("issue_number"),
             "title": issue.get("title") or "",
             "body": issue.get("body") or "",
-            "labels": [l.get("name") for l in issue.get("labels", []) if isinstance(l, dict) and "name" in l],
+            "labels": issue.get("labels") or [],          
             "state": issue.get("state") or "",
-            "repo": repo_from_url(issue.get("repository_url", "")) if issue.get("repository_url") else "",
+            "repo": issue.get("repo_full_name") or "",    
             "created_at": issue.get("created_at") or ""
         }
 
-        fout.write(json.dumps(doc) + "\n")
+        fout.write(json.dumps(doc, ensure_ascii=False) + "\n")
         count += 1
 
 print(f"Wrote {count} issue-documents to {OUTPUT}")
