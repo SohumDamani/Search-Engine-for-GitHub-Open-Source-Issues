@@ -19,14 +19,17 @@ with open(INPUT, "r", encoding="utf-8") as fin, open(OUTPUT, "w", encoding="utf-
             continue
 
         doc = {
-            "issue_id": issue.get("issue_number"),
-            "title": issue.get("title") or "",
-            "body": issue.get("body") or "",
-            "labels": issue.get("labels") or [],          
-            "state": issue.get("state") or "",
-            "repo": issue.get("repo_full_name") or "",    
-            "created_at": issue.get("created_at") or ""
-        }
+    "issue_id": issue.get("issue_number"),
+    "repo": issue.get("repo_full_name") or "",
+    "title": issue.get("title") or "",
+    "body": issue.get("body") or "",
+    "state": issue.get("state") or "",
+    "labels": issue.get("labels") or [],
+    "created_at": issue.get("created_at") or "",
+    "updated_at": issue.get("updated_at") or "",
+    "issue_url": (raw_obj.get("html_url") if isinstance(raw_obj, dict) else "") or ""
+}
+
 
         fout.write(json.dumps(doc, ensure_ascii=False) + "\n")
         count += 1
