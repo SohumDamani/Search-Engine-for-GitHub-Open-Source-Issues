@@ -30,7 +30,6 @@ with open(INPUT, "r", encoding="utf-8") as fin, open(OUTPUT, "w", encoding="utf-
     "updated_at": issue.get("updated_at") or "",
     "issue_url": raw_obj.get("html_url") or ""
 }
-
         fout.write(json.dumps(doc, ensure_ascii=False) + "\n")
         count += 1
 
