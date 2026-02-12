@@ -107,7 +107,7 @@ def main() -> None:
             owner, name = full_name.split("/", 1)
             print(f"[{idx}/{len(repos)}] Fetching issues for {full_name}...")
 
-            issues = fetch_issues_for_repo(client, owner, name)
+            issues = fetch_issues_for_repo(client, owner, name, max_issues=100)
 
             for issue in issues:
                 # Add a few explicit fields for convenience
