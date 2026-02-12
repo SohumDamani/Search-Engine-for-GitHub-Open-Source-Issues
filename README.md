@@ -181,5 +181,5 @@ repo    title                                   issue_id
 
 - Processed documents: data/processed/documents.jsonl  
 - Elasticsearch index: github_issues  
-- Total indexed documents: 55,976 GitHub issues  
+- Total indexed documents: 45,906 GitHub issues  
 - Search type: Full-text keyword search using BM25 ranking
