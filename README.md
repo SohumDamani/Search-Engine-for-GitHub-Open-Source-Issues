@@ -159,7 +159,7 @@ Invoke-RestMethod http://localhost:9200/github_issues/_count
 
 Result:
 
-count: 55976  
+count: 45906  
 
 ---
 
