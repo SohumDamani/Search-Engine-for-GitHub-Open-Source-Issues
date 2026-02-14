@@ -76,6 +76,22 @@ Raw GitHub Issues (data/rawData/issues.jsonl)
 → Searchable IR index
 
 ---
+### How to Run Indexing (Docker)
+1. Run the Docker Container
+  docker run -it --name cs242-crawler   bash
+ 
+2. Verify Elasticsearch is Running
+  curl http://elasticsearch:9200
+3. Run the Indexing Pipeline
+  python indexing/preprocess.py
+  python indexing/create_index.py
+  python indexing/index_documents.py
+4. Verify Indexing Output (Document Count)
+  curl -s http://es-node:9200/github_issues/_count
+
+
+### How to Run Indexing (Locally)
+
 
 ### Prerequisites
 
@@ -84,8 +100,6 @@ Raw GitHub Issues (data/rawData/issues.jsonl)
 - Elasticsearch running locally on http://localhost:9200
 
 ---
-
-### How to Run Indexing
 
 #### Step 1: Create and activate Python virtual environment
 
