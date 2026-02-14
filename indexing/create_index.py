@@ -1,12 +1,17 @@
+import os
 from elasticsearch import Elasticsearch
 
 INDEX_NAME = "github_issues"
+ES_HOST = os.getenv("ES_URL", "http://localhost:9200")
 
-es = Elasticsearch("http://localhost:9200")
-
-if es.indices.exists(index=INDEX_NAME):
-    print(f"Index '{INDEX_NAME}' already exists. Deleting...")
-    es.indices.delete(index=INDEX_NAME)
+es = Elasticsearch(
+    ES_HOST,
+    verify_certs=False,
+    headers={
+        "Accept": "application/vnd.elasticsearch+json; compatible-with=7",
+        "Content-Type": "application/vnd.elasticsearch+json; compatible-with=7"
+    }
+)
 
 mapping = {
     "settings": {
@@ -23,19 +28,23 @@ mapping = {
         "properties": {
             "issue_id": {"type": "keyword"},
             "repo": {"type": "keyword"},
-            "title": {
-                "type": "text",
-                "analyzer": "custom_english"
-            },
-            "body": {
-                "type": "text",
-                "analyzer": "custom_english"
-            },
+            "title": {"type": "text", "analyzer": "custom_english"},
+            "body": {"type": "text", "analyzer": "custom_english"},
             "labels": {"type": "keyword"},
             "created_at": {"type": "date"}
         }
     }
 }
 
-es.indices.create(index=INDEX_NAME, body=mapping)
-print(f"Index '{INDEX_NAME}' created successfully.")
+try:
+    if es.indices.exists(index=INDEX_NAME):
+        es.indices.delete(index=INDEX_NAME)
+
+    es.indices.create(
+        index=INDEX_NAME,
+        settings=mapping["settings"],
+        mappings=mapping["mappings"]
+    )
+    print(f"Index '{INDEX_NAME}' created successfully at {ES_HOST}.")
+except Exception as e:
+    print(f"Error: {e}")
