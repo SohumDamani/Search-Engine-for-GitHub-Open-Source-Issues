@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Issue Search</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background: #f7f7f7;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            padding: 24px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            margin-bottom: 16px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+        .radio-group {
+            margin-bottom: 16px;
+        }
+        .radio-group label {
+            font-weight: normal;
+            margin-right: 20px;
+        }
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #1d4ed8;
+        }
+        .result {
+            border-top: 1px solid #ddd;
+            padding: 16px 0;
+        }
+        .score {
+            color: #555;
+            font-size: 14px;
+        }
+        a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .snippet {
+            margin-top: 8px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>GitHub Open Source Issue Search</h1>
+
+        <form method="POST">
+            <label for="query">Search Query</label>
+            <input type="text" id="query" name="query" value="{{ query or '' }}" required>
+
+            <div class="radio-group">
+                <span><strong>Choose Index:</strong></span><br><br>
+                <label>
+                    <input type="radio" name="index_choice" value="elastic" {% if index_choice == 'elastic' %}checked{% endif %}>
+                    Elasticsearch
+                </label>
+                <label>
+                    <input type="radio" name="index_choice" value="bert" {% if index_choice == 'bert' %}checked{% endif %}>
+                    BERT
+                </label>
+            </div>
+
+            <label for="top_k">Top K Results</label>
+            <input type="number" id="top_k" name="top_k" value="{{ top_k or 5 }}" min="1" max="20">
+
+            <button type="submit">Search</button>
+        </form>
+
+        {% if results is not none %}
+            <h2 style="margin-top: 30px;">Results</h2>
+            {% if results %}
+                {% for r in results %}
+                    <div class="result">
+                        <div><strong>Rank:</strong> {{ r.rank }}</div>
+                        <div class="score"><strong>Score:</strong> {{ r.score }}</div>
+                        <div><strong>Repo:</strong> {{ r.repo }}</div>
+                        <div><strong>Title:</strong> {{ r.title }}</div>
+                        <div><strong>URL:</strong> <a href="{{ r.url }}" target="_blank">{{ r.url }}</a></div>
+                        <div class="snippet"><strong>Snippet:</strong> {{ r.snippet }}</div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No results found.</p>
+            {% endif %}
+        {% endif %}
+    </div>
+</body>
+</html>
