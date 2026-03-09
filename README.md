@@ -197,3 +197,168 @@ repo    title                                   issue_id
 - Elasticsearch index: github_issues  
 - Total indexed documents: 45,906 GitHub issues  
 - Search type: Full-text keyword search using BM25 ranking
+
+---
+
+# Part B – Dense Retrieval using BERT and Query Interface
+
+In addition to the sparse BM25 index created using Elasticsearch in Part A, we implemented a dense retrieval pipeline using BERT embeddings and FAISS vector search. This allows semantic search where queries can retrieve relevant issues even if the exact keywords do not appear in the document.
+
+Each GitHub issue document is converted into a passage and encoded into a dense vector embedding using a pretrained BERT model.
+
+---
+
+## Dense Indexing Pipeline Overview
+
+Processed Documents (data/processed/documents.jsonl)  
+→ Passage Generation  
+→ BERT Embedding Creation  
+→ FAISS Vector Index  
+→ Semantic Search Retrieval
+
+---
+
+## Step 1: Generate Passages
+
+GitHub issues are converted into passages suitable for BERT input.
+
+Each passage is created by combining the issue title and issue body in the following format:
+
+title [SEP] body
+
+Run the script:
+
+python bert_indexing/build_passages.py
+
+Output generated:
+
+data/processed/passages.jsonl
+
+Each line in the file represents one passage extracted from a GitHub issue.
+
+---
+
+## Step 2: Generate BERT Embeddings
+
+Each passage is converted into a dense embedding using the pretrained model:
+
+sentence-transformers/all-MiniLM-L6-v2
+
+Run:
+
+python bert_indexing/embed_passages.py
+
+Outputs generated:
+
+data/faiss/passage_embeddings.npy  
+data/faiss/passage_metadata.jsonl
+
+Each passage is represented as a 384-dimensional embedding vector.
+
+---
+
+## Step 3: Build FAISS Vector Index
+
+The embeddings are stored in a FAISS index for efficient nearest-neighbor similarity search.
+
+Run:
+
+python bert_indexing/build_faiss_index.py
+
+Output generated:
+
+data/faiss/github_issues.faiss
+
+The FAISS index stores embeddings for all passages.
+
+---
+
+## Step 4: Run Dense Retrieval Search
+
+Queries can now be searched using BERT embeddings and FAISS similarity search.
+
+Run:
+
+python bert_indexing/search_bert.py --query "login bug" --top_k 5
+
+Process:
+
+1. The query is converted into a BERT embedding  
+2. FAISS finds the nearest passage embeddings  
+3. The top-k results are returned
+
+---
+
+## Indexing Time Comparison
+
+Two indexing methods were implemented in this project.
+
+| Method | Representation | Indexing Time |
+|------|------|------|
+| Elasticsearch | Sparse BM25 index | ~23.28 seconds |
+| BERT + FAISS | Dense vector index | ~1760.47 seconds |
+
+Elasticsearch indexing is faster because it builds an inverted index, while BERT indexing requires generating embeddings using a neural model for every passage.
+
+---
+
+# Query Interface (B2)
+
+A web interface was implemented using Flask to allow users to search using either Elasticsearch (BM25) or BERT (dense retrieval).
+
+The interface allows the user to:
+
+- Enter a search query
+- Select the retrieval method
+- Specify the number of results (Top-K)
+
+---
+
+## Running the Web Application
+
+Start the search interface:
+
+python app.py
+
+Open a browser and go to:
+
+http://localhost:5000
+
+---
+
+## Web Interface Features
+
+The interface includes:
+
+- Textbox for entering a search query
+- Radio button to select the index:
+  - Elasticsearch (BM25)
+  - BERT (semantic search)
+- Input field to select the number of results
+- Ranked results displaying:
+  - repository name
+  - issue title
+  - GitHub issue URL
+  - snippet of issue text
+
+---
+
+## Example Query
+
+Example query used during testing:
+
+login bug
+
+The system can return results using either:
+
+- Elasticsearch keyword search (BM25 ranking)
+- BERT semantic similarity search using FAISS
+
+---
+
+## Output Summary
+
+- Dense embeddings generated for approximately **45,906 passages**
+- FAISS vector index created
+- Semantic search retrieval implemented
+- Web interface supports both BM25 and BERT search
