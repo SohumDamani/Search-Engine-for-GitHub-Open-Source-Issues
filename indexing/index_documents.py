@@ -1,11 +1,13 @@
 import json
 import time
+import os
 from elasticsearch import Elasticsearch, helpers
 
 INDEX_NAME = "github_issues"
 DOC_FILE = "data/processed/documents.jsonl"
 
-es = Elasticsearch("http://host.docker.internal:9200")
+es_url = os.getenv("ELASTICSEARCH_URL", "http://localhost:9200")
+es = Elasticsearch(es_url)
 
 def generate_actions():
     with open(DOC_FILE, "r", encoding="utf-8") as f:

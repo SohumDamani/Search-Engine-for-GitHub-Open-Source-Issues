@@ -4,9 +4,11 @@ WORKDIR /app
 
 COPY dataCollection/requirements.txt /app/dataCollection/requirements.txt
 COPY indexing/requirements.txt /app/indexing/requirements.txt
+COPY bert_indexing/requirements.txt /app/bert_indexing/requirements.txt
 
 RUN pip install --no-cache-dir -r /app/dataCollection/requirements.txt
 RUN pip install --no-cache-dir -r /app/indexing/requirements.txt
+RUN pip install --no-cache-dir -r /app/bert_indexing/requirements.txt
 
 RUN apt-get update && apt-get install -y \
     curl \

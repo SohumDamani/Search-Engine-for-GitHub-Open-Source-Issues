@@ -1,4 +1,5 @@
 import argparse
+import os
 from elasticsearch import Elasticsearch
 
 INDEX_NAME = "github_issues"
@@ -10,7 +11,8 @@ def main():
     parser.add_argument("--top_k", type=int, default=5, help="Number of results")
     args = parser.parse_args()
 
-    es = Elasticsearch("http://host.docker.internal:9200")
+    es_url = os.getenv("ELASTICSEARCH_URL", "http://localhost:9200")
+    es = Elasticsearch(es_url)
 
     body = {
         "size": args.top_k,
