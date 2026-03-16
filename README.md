@@ -295,8 +295,8 @@ Two indexing methods were implemented in this project.
 
 | Method | Representation | Indexing Time |
 |------|------|------|
-| Elasticsearch | Sparse BM25 index | ~23.28 seconds |
-| BERT + FAISS | Dense vector index | ~1760.47 seconds |
+| Elasticsearch | Sparse BM25 index | ~19.9 seconds |
+| BERT + FAISS | Dense vector index | ~1494 seconds |
 
 Elasticsearch indexing is faster because it builds an inverted index, while BERT indexing requires generating embeddings using a neural model for every passage.
 
